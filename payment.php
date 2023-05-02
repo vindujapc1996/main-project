@@ -1,23 +1,26 @@
 <?php
-session_start(); 
+session_start();
 include 'connection.php';
-$customer_id=$_SESSION['id'];
-$sql="SELECT * FROM customer_registration WHERE customer_id=$customer_id";
-$result=mysqli_query($con,$sql);
-?>
+if(!isset($_SESSION['id']))
+{
+    header('location:login1.php');
+    
+}
+else
+{
+  $id1=$_SESSION['id'];
+    $sql=mysqli_query($con,"SELECT turf_registration.amount,booking_tb.book_id,booking_tb.customer_id FROM turf_registration INNER JOIN booking_tb ON turf_registration.turf_id=booking_tb.turf_id WHERE customer_id='$id1' order by book_id desc");
+  
+    $row=mysqli_fetch_assoc($sql);
+  
 
+  
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <style>
-    .card{
-        color:black;
-        border: radius 80px;
-  
-    }
-  </style>
-  <meta charset="utf-8">
+      <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title> Bootstrap Template</title>
@@ -41,7 +44,60 @@ $result=mysqli_query($con,$sql);
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+
+ 
 </head>
+<style>
+  .confetti-button {
+    display: inline-block;
+    position: relative;
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+  }
+
+  .confetti-button:hover {
+    background-color: #ff5722;
+  }
+
+  .confetti-button::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background-image: url('https://cdn.pixabay.com/photo/2017/12/29/16/41/confetti-3046658_1280.png');
+    background-repeat: repeat-x;
+    animation: confetti-fall 2s linear infinite;
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+  .card{
+    background-image: url('https://thumbs.gfycat.com/CorruptBriefGreatwhiteshark-max-1mb.gif');
+    background-repeat: no-repeat;
+    background-size: cover;
+    animation: background-animation 10s infinite;
+    border-radius:30px;
+  }
+
+  
+
+  
+  </style>
 
 <body>
 
@@ -73,55 +129,32 @@ $result=mysqli_query($con,$sql);
 
   <!-- ======= Hero Section ======= -->
   <section id="hero">
-    
-    <div class="container">
-      <div class="row">
-  <?php
- if(mysqli_num_rows($result)>0)
-{
-  while($row=mysqli_fetch_assoc($result))
-  {
-    ?>
-    <div class="card" style="width:25%; margin-top:10%; margin-left:500px;">
-    <div class="form-group mt-4">
-    <?php echo '<img src="./images/'.$row["image"].'" alt="customerimage" style="width:200px; height:200px;">';?>
-   </div>
+    <div class="hero-container">
+        <div class="row">
+            <div class="card" style="height:130%; width:100%;">
+            <form  method="POST" required>
+              <br>
+              <br>
+                <br>
+                <input type="number" name="amount" value="<?php echo $row['amount'];?>">
+                <br>
+                <br>
+                  <p style="color:red;">status</p>
+                 <input type="radio" id="html" name="status" value="paid">
+                <label for="html" style="color:red;">paid</label>
+                <input type="radio" id="css" name="status" value="unpaid">
+                <label for="html" style="color:red;">unpaid</label>
+                <br>
+                <br>
+             <input class="confetti-button" type="submit" name="submit">
+            </form>
 
-    <div class="form-group mt-4">
-   <?php echo "customer_id:".$row["customer_id"]."<br>";?>
-   </div>
-   <div class="form-group mt-4">
-   <?php echo "customer_name:".$row["customer_name"]."<br>";?>
-   </div>
-   <div class="form-group mt-4">
-   <?php echo "dob:".$row["dob"]."<br>";?>
-   </div>
-   <div class="form-group mt-4">
-   <?php echo "email:".$row["email"]."<br>";?>
-   </div>
-   <div class="form-group mt-4">
-    <?php echo "address:".$row["address"]."<br>";?>
-    </div>
-    <div class="form-group mt-4">
-   <?php echo "contact:".$row["contact"]."<br>";?>
-   </div>
-      <div class="form-group mt-4">
-   <a class="btn btn-primary" href="customer_edit_profile.php?id=<?php echo $row['customer_id']?>">EDIT</a>
-   </div>
-   <?php
-  }
-}
-else{
-  echo "no result found";
-}
-mysqli_close($con);
-?>
+            </div>
+        </div>
 </div>
-</div>
-  </section><!-- End Hero Section -->
 
-  <main id="main">
-  </main><!-- End #main -->
+</section>
+  
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
@@ -137,6 +170,23 @@ mysqli_close($con);
   <script src="assets/js/main.js"></script>
 
 </body>
-
 </html>
-        
+<?php 
+if(isset($_POST['submit']))
+{
+  $id1=$_SESSION['id'];
+  $status=$_POST['status'];
+  $amount=$_POST['amount'];
+  $book_id=$_SESSION['book_id'];
+  mysqli_query($con,"INSERT INTO `payment_tb`(`customer_id`,`book_id`,`amount`,`status`)VALUES('$id1','$book_id','$amount','$status')");
+  $pay=mysqli_insert_id($con);
+  $result=mysqli_query($con,"UPDATE `booking_tb` SET `payment_id`='$pay' WHERE customer_id='$id1' AND book_id='$book_id'");
+  if($result)
+  {
+    echo'<script>alert("booking successfull")</script>';
+    header('location:book_turf.php');
+      
+}
+}
+}
+?>

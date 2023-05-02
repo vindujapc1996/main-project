@@ -1,22 +1,36 @@
 <?php
 session_start();
 include 'connection.php';
-$data=mysqli_query($con,"SELECT * FROM `owner_registration`");
+if(!isset($_SESSION['id']))
+{
+    header('location:login1.php');
+}
+else{
+    $id1=$_SESSION['id'];
+    $sql=mysqli_query($con,"SELECT booking_tb.book_id,booking_tb.from_date,booking_tb.to_date,customer_registration.customer_name,customer_registration.contact,turf_registration.turf_name,payment_tb.status, payment_tb.amount FROM booking_tb
+     INNER JOIN customer_registration ON booking_tb.customer_id=customer_registration.customer_id 
+     INNER JOIN turf_registration ON booking_tb.turf_id=turf_registration.turf_id 
+     INNER JOIN payment_tb ON booking_tb.payment_id=payment_tb.payment_id WHERE owner_id='$id1'");
+    
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <style>
-        table,tr,th,td
+<style>
+    table,tr,th,td
         {
-         border:3px solid black;
+         border:2px solid black;
          border-collapse:collapse;
          color:white;
          padding-bottom:10px;
         }
         </style>
-  <meta charset="utf-8">
+
+
+
+      <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title> Bootstrap Template</title>
@@ -40,6 +54,8 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+
+  
 </head>
 
 <body>
@@ -56,15 +72,14 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
       <nav id="navbar" class="navbar">
         <ul>
-        <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-          <li><a class="nav-link scrollto" href="index1.php">customer </a></li>
-           <li><a class="nav-link scrollto" href="viewowner.php">owner</a></li>
-          <li><a class="nav-link scrollto " href="feedbackviewadmin.php">feedback</a></li>
-          <li><a class="nav-link scrollto " href="sendnotification.php">notification</a></li>
-          <li><a class="nav-link scrollto" href="book_turf.php">view Turf</a></li>
-          <li><a class="nav-link scrollto" href="changepassword.php">change PASSWORD</a></li>
-          <li><a class="nav-link scrollto" href="login1.php">log out</a></li> 
-                </ul>
+        <li><a class="nav-link scrollto active" href="ownerhomepage.php">Home</a></li>
+          <li><a class="nav-link scrollto" href="ownerprofile.php">profile view </a></li>
+           <li><a class="nav-link scrollto" href="turf_registration.php">turf register</a></li>
+          <li><a class="nav-link scrollto " href="turfview.php">view turf</a></li>
+          <li><a class="nav-link scrollto" href="viewbooking_owner.php">view booked turf</a></li>
+          <li><a class="nav-link scrollto" href="logout.php">log out</a></li> 
+
+                          </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
     </div>
@@ -72,58 +87,52 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
   <!-- ======= Hero Section ======= -->
   <section id="hero">
-    <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
-    <center>
-    <table class="table table-bordered">
+  <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
+    <div class="row">
+    <table class="table table-bordered" style="margin-top:5%;">
         <tr>
-            <th>owner_name</th>
-            <th>address</th>
-            <th>email</th>
-            <th>contact</th>
-            <th>approval_status</th>
-            <th>image</th>
+            <th>BOOKING ID</th>
+            <th>TURF NAME</th>
+            <th>FROM DATE</th>
+            <th>TO DATE</th>
+            <th>CUSTOMER NAME</th>
+            <th>AMOUNT</th>
+            <th>PAYMENT STATUS</th>
             
         </tr>
         <?php
-        while($row=mysqli_fetch_assoc($data))
-        { 
-        ?>
+        while($row=mysqli_fetch_assoc($sql))
+        {
+            ?>
         <tr>
-        
-            <td><?php echo $row['owner_name'];?></td>
-            <td><?php echo $row['address'];?></td>
-            <td><?php echo $row['email'];?></td>
-            <td><?php echo $row['contact'];?></td>
-            <td><?php echo $row['approval_status'];?></td>
-            <td><img src="./images/<?php echo $row['image'];?>" height="50" width="50" alt=""></td>
+            <td><?php echo $row['book_id'];?></td>
+            <td><?php echo $row['turf_name'];?></td>
+            <td><?php echo $row['from_date'];?></td>
+            <td><?php echo $row['to_date'];?></td>
+            <td><?php echo $row['customer_name'];?></td>
+            <td><?php echo $row['amount'];?></td>
+            <td><?php echo $row['status'];?></td>
+ 
+            
 
-
-            <td>
-              <?php
-              if($row['approval_status']==0)
-              {
-              ?>
-              <a class="btn btn-primary" href="update_statusowner.php?id=<?php echo $row['owner_id'];?>">approve</a>
-              <?php
-              }
-                elseif($row['approval_status']==1)
-                {
-                  ?>
-                  <button class="btn btn-danger">approved</button>
-                  <?php
-                }
-                ?>
-                </td>
-              
         </tr>
         <?php
         }
         ?>
+
     </table>
-    </center>
+    </div>
+  </div>
+        
+      
   </section><!-- End Hero Section -->
+
   <main id="main">
+
+   
   </main><!-- End #main -->
+
+ 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
@@ -141,3 +150,6 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 </body>
 
 </html>
+<?php }
+?>
+        

@@ -1,13 +1,13 @@
 <?php
 session_start();
 include 'connection.php';
-$data=mysqli_query($con,"SELECT * FROM `owner_registration`");
+$data=mysqli_query($con,"SELECT * FROM `feedback_tb`");
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <style>
+<style>
         table,tr,th,td
         {
          border:3px solid black;
@@ -16,7 +16,10 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
          padding-bottom:10px;
         }
         </style>
-  <meta charset="utf-8">
+
+
+
+      <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title> Bootstrap Template</title>
@@ -40,7 +43,8 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-</head>
+
+  </head>
 
 <body>
 
@@ -56,15 +60,16 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
       <nav id="navbar" class="navbar">
         <ul>
-        <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+        <li><a class="nav-link scrollto active" href="adminhomepage.php">Home</a></li>
           <li><a class="nav-link scrollto" href="index1.php">customer </a></li>
            <li><a class="nav-link scrollto" href="viewowner.php">owner</a></li>
           <li><a class="nav-link scrollto " href="feedbackviewadmin.php">feedback</a></li>
           <li><a class="nav-link scrollto " href="sendnotification.php">notification</a></li>
-          <li><a class="nav-link scrollto" href="book_turf.php">view Turf</a></li>
+          <li><a class="nav-link scrollto" href="turfview.php">view Turf</a></li>
           <li><a class="nav-link scrollto" href="changepassword.php">change PASSWORD</a></li>
-          <li><a class="nav-link scrollto" href="login1.php">log out</a></li> 
-                </ul>
+          <li><a class="nav-link scrollto" href="logout.php">log out</a></li> 
+ 
+        </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
     </div>
@@ -72,56 +77,42 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
   <!-- ======= Hero Section ======= -->
   <section id="hero">
+    
     <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
     <center>
     <table class="table table-bordered">
-        <tr>
-            <th>owner_name</th>
-            <th>address</th>
-            <th>email</th>
-            <th>contact</th>
-            <th>approval_status</th>
-            <th>image</th>
+
+    
             
-        </tr>
-        <?php
-        while($row=mysqli_fetch_assoc($data))
-        { 
-        ?>
-        <tr>
-        
-            <td><?php echo $row['owner_name'];?></td>
-            <td><?php echo $row['address'];?></td>
-            <td><?php echo $row['email'];?></td>
-            <td><?php echo $row['contact'];?></td>
-            <td><?php echo $row['approval_status'];?></td>
-            <td><img src="./images/<?php echo $row['image'];?>" height="50" width="50" alt=""></td>
+                <tr>
+                    <th>feedback_id</th>
+                    <th>message</th>
+                    <th>customer_id</th>
+                    <th>date</th>
+                    <?php
+                    while($row=mysqli_fetch_assoc($data))
+                    {
+                        ?>
+                        <tr>
+                            <td><?php echo $row['feedback_id'];?></td>
+                            <td><?php echo $row['message'];?></td>
+                            <td><?php echo $row['customer_id'];?></td>
+                            <td><?php echo $row['date'];?></td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                </tr>
 
+            </table>
+            
+      
 
-            <td>
-              <?php
-              if($row['approval_status']==0)
-              {
-              ?>
-              <a class="btn btn-primary" href="update_statusowner.php?id=<?php echo $row['owner_id'];?>">approve</a>
-              <?php
-              }
-                elseif($row['approval_status']==1)
-                {
-                  ?>
-                  <button class="btn btn-danger">approved</button>
-                  <?php
-                }
-                ?>
-                </td>
-              
-        </tr>
-        <?php
-        }
-        ?>
-    </table>
-    </center>
+</div>
+    
+         </div>
   </section><!-- End Hero Section -->
+
   <main id="main">
   </main><!-- End #main -->
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-  <style>
-   p{
-    color:black;
+<style>
+   p {
+    color: black;
    }
-  </style>
+   </style>
 
 
     
@@ -37,14 +37,7 @@
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Regna
-  * Updated: Mar 10 2023 with Bootstrap v5.2.3
-  * Template URL: https://bootstrapmade.com/regna-bootstrap-onepage-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
-</head>
+  </head>
 
 <body>
 
@@ -78,9 +71,10 @@
 
   <!-- ======= Hero Section ======= -->
   <section id="hero">
-    <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
+    <div class="hero-container" data-aos="zoom-in" data-aos-delay="100" >
          <h1 >LET . PLAY . THE . WORLD</h1>
-      
+        
+
       <a href="#about" class="btn-get-started">Get Started</a>
     </div>
   </section><!-- End Hero Section -->
@@ -131,7 +125,7 @@
       <div class="container" data-aos="fade-up">
         <div class="section-header">
           <h3 class="section-title">Facts</h3>
-          <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+          
         </div>
         <div class="row counters">
 

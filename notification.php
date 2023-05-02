@@ -1,8 +1,20 @@
 <?php
 session_start();
 include 'connection.php';
-$data=mysqli_query($con,"SELECT * FROM `owner_registration`");
+if(!isset($_SESSION['id']))
+{
+    header('location: login1.php');
+    exit(); // Add exit() to stop executing the rest of the code
+}
+else
+{
+    $id1 = $_SESSION['id'];
+    $sql = "SELECT * FROM `notification_tb` WHERE customer_id='$id1'";
+    $result = mysqli_query($con, $sql);
+}
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,6 +52,8 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+
+  
 </head>
 
 <body>
@@ -56,15 +70,15 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
       <nav id="navbar" class="navbar">
         <ul>
-        <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-          <li><a class="nav-link scrollto" href="index1.php">customer </a></li>
-           <li><a class="nav-link scrollto" href="viewowner.php">owner</a></li>
-          <li><a class="nav-link scrollto " href="feedbackviewadmin.php">feedback</a></li>
-          <li><a class="nav-link scrollto " href="sendnotification.php">notification</a></li>
-          <li><a class="nav-link scrollto" href="book_turf.php">view Turf</a></li>
-          <li><a class="nav-link scrollto" href="changepassword.php">change PASSWORD</a></li>
-          <li><a class="nav-link scrollto" href="login1.php">log out</a></li> 
-                </ul>
+        <li><a class="nav-link scrollto active" href="customerhomepage.php">Home</a></li>
+          <li><a class="nav-link scrollto" href="customer-profile.php">view profile</a></li>
+           <li><a class="nav-link scrollto" href="book_turf.php">view turf</a></li>
+          <li><a class="nav-link scrollto " href="feedback.php">feedback</a></li>
+           <li><a class="nav-link scrollto" href="notification.php">notification</a></li>
+         
+          <li><a class="nav-link scrollto" href="logout.php">log out</a></li> 
+
+        </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
     </div>
@@ -72,58 +86,33 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
   <!-- ======= Hero Section ======= -->
   <section id="hero">
-    <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
-    <center>
-    <table class="table table-bordered">
-        <tr>
-            <th>owner_name</th>
-            <th>address</th>
-            <th>email</th>
-            <th>contact</th>
-            <th>approval_status</th>
-            <th>image</th>
-            
-        </tr>
+    
+  <div class="container">
+    <div class="row">
         <?php
-        while($row=mysqli_fetch_assoc($data))
-        { 
+        while($row=mysqli_fetch_assoc($result))
+        {
         ?>
-        <tr>
-        
-            <td><?php echo $row['owner_name'];?></td>
-            <td><?php echo $row['address'];?></td>
-            <td><?php echo $row['email'];?></td>
-            <td><?php echo $row['contact'];?></td>
-            <td><?php echo $row['approval_status'];?></td>
-            <td><img src="./images/<?php echo $row['image'];?>" height="50" width="50" alt=""></td>
-
-
-            <td>
-              <?php
-              if($row['approval_status']==0)
-              {
-              ?>
-              <a class="btn btn-primary" href="update_statusowner.php?id=<?php echo $row['owner_id'];?>">approve</a>
-              <?php
-              }
-                elseif($row['approval_status']==1)
-                {
-                  ?>
-                  <button class="btn btn-danger">approved</button>
-                  <?php
-                }
-                ?>
-                </td>
-              
-        </tr>
+        <div class="card" style="margin-top:20%;width:50%;color:red;">
+            <h2 style="color:red;"><center>NOTIFICATION</center></h2>
+            <div class="form-group mt-4">
+                <?php echo "<div class='notification'>" . $row['notification'] . "</div>"; ?>
+            </div>
+        </div>
         <?php
         }
         ?>
-    </table>
-    </center>
-  </section><!-- End Hero Section -->
+    </div>
+</div>
+
+    
+        </section><!-- End Hero Section -->
+
   <main id="main">
   </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->

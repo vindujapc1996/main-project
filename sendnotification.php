@@ -1,20 +1,31 @@
 <?php
 session_start();
 include 'connection.php';
-$data=mysqli_query($con,"SELECT * FROM `owner_registration`");
+$data = mysqli_query($con, "SELECT * FROM `customer_registration`");
+if (isset($_POST['send'])) {
+    $customer_id = $_POST['customer_id'];
+    $notification = $_POST['notification'];
+    $sql = "INSERT INTO `notification_tb` (`customer_id`, `notification`) VALUES ('$customer_id', '$notification')";
+    if (mysqli_query($con, $sql)) {
+        $_SESSION['notification_sent'] = true; // Set a session variable to indicate successful submission
+        header("Location: sendnotification.php"); // Redirect the user to a success page
+        exit;
+        echo '<script>alert("notification sent successfully")</script>';
+    } else {
+        echo '<script>alert("notification sent successfully")</script>';
+
+           }
+           echo "error sending notification: " . mysqli_error($con);
+
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <style>
-        table,tr,th,td
-        {
-         border:3px solid black;
-         border-collapse:collapse;
-         color:white;
-         padding-bottom:10px;
-        }
+                
         </style>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -40,6 +51,8 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+
+  
 </head>
 
 <body>
@@ -56,15 +69,16 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
       <nav id="navbar" class="navbar">
         <ul>
-        <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+        <li><a class="nav-link scrollto " href="adminhomepage.php">Home</a></li>
           <li><a class="nav-link scrollto" href="index1.php">customer </a></li>
            <li><a class="nav-link scrollto" href="viewowner.php">owner</a></li>
           <li><a class="nav-link scrollto " href="feedbackviewadmin.php">feedback</a></li>
-          <li><a class="nav-link scrollto " href="sendnotification.php">notification</a></li>
-          <li><a class="nav-link scrollto" href="book_turf.php">view Turf</a></li>
+          <li><a class="nav-link scrollto active " href="sendnotification.php">notification</a></li>
+          <li><a class="nav-link scrollto" href="turfview.php">view Turf</a></li>
           <li><a class="nav-link scrollto" href="changepassword.php">change PASSWORD</a></li>
-          <li><a class="nav-link scrollto" href="login1.php">log out</a></li> 
-                </ul>
+          <li><a class="nav-link scrollto" href="logout.php">log out</a></li> 
+
+        </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
     </div>
@@ -72,58 +86,46 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
   <!-- ======= Hero Section ======= -->
   <section id="hero">
-    <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
-    <center>
-    <table class="table table-bordered">
-        <tr>
-            <th>owner_name</th>
-            <th>address</th>
-            <th>email</th>
-            <th>contact</th>
-            <th>approval_status</th>
-            <th>image</th>
-            
-        </tr>
-        <?php
-        while($row=mysqli_fetch_assoc($data))
-        { 
-        ?>
-        <tr>
-        
-            <td><?php echo $row['owner_name'];?></td>
-            <td><?php echo $row['address'];?></td>
-            <td><?php echo $row['email'];?></td>
-            <td><?php echo $row['contact'];?></td>
-            <td><?php echo $row['approval_status'];?></td>
-            <td><img src="./images/<?php echo $row['image'];?>" height="50" width="50" alt=""></td>
+      
+  <form action="" method="POST">
+    <div class="hero-container">
+        <div class="card" style="width: 50%; margin: 0 auto; boredr-radius:">
+            <h2 style="text-align: center; color:red;">SEND NOTIFICATION</h2>
+            <div class="form-group mt-4" style="text-align: center;">
+                <div class="nova">
+                    <label for="customer_id" style="color:red;">Select Customer:</label>
+                    <select name="customer_id" id="customer_id">
+                        <?php
+                        while ($row = mysqli_fetch_assoc($data)) {
+                            echo "<option value='" . $row['customer_id'] . "'>" . $row['customer_name'] . " (ID: " . $row['customer_id'] . ")</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group mt-4" style="text-align: center;">
+                <div class="nova">
+                    <label for="notification" style="color: red;">Notification:</label>
+                    <input type="text" id="notification" name="notification" placeholder="Enter notification message" required>
+                </div>
+            </div>
+            <div class="form-group mt-4" style="text-align: center;">
+                <div class="nova">
+                    <input type="submit" class="btn btn-primary" name="send" value="Send">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 
-
-            <td>
-              <?php
-              if($row['approval_status']==0)
-              {
-              ?>
-              <a class="btn btn-primary" href="update_statusowner.php?id=<?php echo $row['owner_id'];?>">approve</a>
-              <?php
-              }
-                elseif($row['approval_status']==1)
-                {
-                  ?>
-                  <button class="btn btn-danger">approved</button>
-                  <?php
-                }
-                ?>
-                </td>
-              
-        </tr>
-        <?php
-        }
-        ?>
-    </table>
-    </center>
+    
   </section><!-- End Hero Section -->
+
   <main id="main">
-  </main><!-- End #main -->
+
+        </main><!-- End #main -->
+
+  
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->

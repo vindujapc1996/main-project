@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-$data=mysqli_query($con,"SELECT * FROM `owner_registration`");
+$data=mysqli_query($con,"SELECT turf_id,turf_name,turf_place,amount,image FROM `turf_registration`");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +15,8 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
          color:white;
          padding-bottom:10px;
         }
+         
+    
         </style>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -40,6 +42,8 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+
+  
 </head>
 
 <body>
@@ -56,15 +60,15 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
       <nav id="navbar" class="navbar">
         <ul>
-        <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-          <li><a class="nav-link scrollto" href="index1.php">customer </a></li>
-           <li><a class="nav-link scrollto" href="viewowner.php">owner</a></li>
-          <li><a class="nav-link scrollto " href="feedbackviewadmin.php">feedback</a></li>
-          <li><a class="nav-link scrollto " href="sendnotification.php">notification</a></li>
-          <li><a class="nav-link scrollto" href="book_turf.php">view Turf</a></li>
-          <li><a class="nav-link scrollto" href="changepassword.php">change PASSWORD</a></li>
-          <li><a class="nav-link scrollto" href="login1.php">log out</a></li> 
-                </ul>
+        <li><a class="nav-link scrollto active" href="ownerhomepage.php">Home</a></li>
+          <li><a class="nav-link scrollto" href="ownerprofile.php">profile view </a></li>
+           <li><a class="nav-link scrollto" href="turf_registration.php">turf register</a></li>
+          <li><a class="nav-link scrollto " href="turfview2.php">view turf</a></li>
+          <li><a class="nav-link scrollto" href="viewbooking_owner.php">view booked turf</a></li>
+          <li><a class="nav-link scrollto" href="logout.php">log out</a></li> 
+  
+
+        </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
     </div>
@@ -72,15 +76,17 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
 
   <!-- ======= Hero Section ======= -->
   <section id="hero">
+    <br>
+    <br>
     <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
+    
     <center>
     <table class="table table-bordered">
         <tr>
-            <th>owner_name</th>
-            <th>address</th>
-            <th>email</th>
-            <th>contact</th>
-            <th>approval_status</th>
+          <th>turf_id</th>
+            <th>turf_name</th>
+            <th>turf_place</th>
+            <th>amount</th> 
             <th>image</th>
             
         </tr>
@@ -89,39 +95,26 @@ $data=mysqli_query($con,"SELECT * FROM `owner_registration`");
         { 
         ?>
         <tr>
-        
-            <td><?php echo $row['owner_name'];?></td>
-            <td><?php echo $row['address'];?></td>
-            <td><?php echo $row['email'];?></td>
-            <td><?php echo $row['contact'];?></td>
-            <td><?php echo $row['approval_status'];?></td>
-            <td><img src="./images/<?php echo $row['image'];?>" height="50" width="50" alt=""></td>
+          <td><?php echo $row['turf_id'];?></td>
+            <td><?php echo $row['turf_name'];?></td>
+            <td><?php echo $row['turf_place'];?></td>
+            <td><?php echo $row['amount'];?></td>
+            
+            
+            <td><img src="./images/<?php echo $row['image'];?>" height="75" width="75" alt=""></td>
 
 
-            <td>
-              <?php
-              if($row['approval_status']==0)
-              {
-              ?>
-              <a class="btn btn-primary" href="update_statusowner.php?id=<?php echo $row['owner_id'];?>">approve</a>
-              <?php
-              }
-                elseif($row['approval_status']==1)
-                {
-                  ?>
-                  <button class="btn btn-danger">approved</button>
-                  <?php
-                }
-                ?>
-                </td>
-              
+                
         </tr>
         <?php
         }
         ?>
     </table>
     </center>
+
+          </div>
   </section><!-- End Hero Section -->
+
   <main id="main">
   </main><!-- End #main -->
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
